@@ -1,11 +1,13 @@
 package com.spring4.rest.services.impls;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.spring4.rest.controllers.beans.Employee;
 import com.spring4.rest.daos.EmployeeDao;
 import com.spring4.rest.services.EmployeeService;
 
+@Service(value= "employeeService")
 public class EmployeeServiceImpl implements EmployeeService {
 
 	@Autowired

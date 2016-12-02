@@ -1,8 +1,15 @@
 package com.spring4.rest.controllers.beans;
 
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+
+@Embeddable
 public class Role {
 
+	@Column(name ="r_nm")
 	private String roleName;
+	
+	@Column(name ="respo")
 	private String responsiblities;
 
 	public String getRoleName() {

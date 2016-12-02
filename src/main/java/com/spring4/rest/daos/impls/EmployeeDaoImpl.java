@@ -1,16 +1,17 @@
 package com.spring4.rest.daos.impls;
 
-import java.util.Collections;
 import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
 
 import com.spring4.rest.controllers.beans.Employee;
 import com.spring4.rest.daos.AbstractCurdDao;
 import com.spring4.rest.daos.EmployeeDao;
 
+@Repository(value = "employeeDao")
 public class EmployeeDaoImpl extends AbstractCurdDao implements EmployeeDao {
 
 	public Employee createEmployee(Employee employee) {

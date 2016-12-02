@@ -4,11 +4,16 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.MapKeyColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.spring4.rest.enums.EmployeeStatus;
@@ -30,9 +35,23 @@ public class Employee {
 
 	@Column(name = "gender")
 	private String gender;
+	
+	@ElementCollection(targetClass = java.lang.String.class)
+	@CollectionTable(name = "contacts", joinColumns = {@JoinColumn(name = "emp_id")})
+	@MapKeyColumn(name = "contact_type")
+	@Column(name = "contact")
 	private Map<String, String> contacts;
 
-	private String address;
+	@ElementCollection
+	@CollectionTable(name = "addresses", joinColumns = {@JoinColumn(name = "emp_id")})
+	@MapKeyColumn(name = "address_type")
+	@Column(name = "address")
+	private Map<String, Address> addresses;
+	
+	
+	@ElementCollection(targetClass = java.lang.String.class)
+	@CollectionTable(name = "skills", joinColumns = {@JoinColumn(name = "emp_id")})
+	@Column(name = "skill")
 	private Set<String> skills;
 
 	@Column(name = "experience")
@@ -53,7 +72,9 @@ public class Employee {
 	@Column(name = "employeeStatus")
 	private EmployeeStatus employeeStatus;
 
-	private Set<PreviousEmmployerDetail> previousEmmployerDetails;
+	@OneToMany
+	@JoinColumn(name = "emp_id")
+	private Set<PreviousEmployerDetail> previousEmployerDetails;
 
 	public Integer getEmployeeId() {
 		return employeeId;
@@ -95,12 +116,12 @@ public class Employee {
 		this.contacts = contacts;
 	}
 
-	public String getAddress() {
-		return address;
+	public Map<String, Address> getAddresses() {
+		return addresses;
 	}
 
-	public void setAddress(String address) {
-		this.address = address;
+	public void setAddresses(Map<String, Address> addresses) {
+		this.addresses = addresses;
 	}
 
 	public Set<String> getSkills() {
@@ -159,21 +180,21 @@ public class Employee {
 		this.employeeStatus = employeeStatus;
 	}
 
-	public Set<PreviousEmmployerDetail> getPreviousEmmployerDetails() {
-		return previousEmmployerDetails;
+	public Set<PreviousEmployerDetail> getPreviousEmmployerDetails() {
+		return previousEmployerDetails;
 	}
 
-	public void setPreviousEmmployerDetails(Set<PreviousEmmployerDetail> previousEmmployerDetails) {
-		this.previousEmmployerDetails = previousEmmployerDetails;
+	public void setPreviousEmmployerDetails(Set<PreviousEmployerDetail> previousEmployerDetails) {
+		this.previousEmployerDetails = previousEmployerDetails;
 	}
 
 	@Override
 	public String toString() {
 		return "Employee [employeeId=" + employeeId + ", firstName=" + firstName + ", lastName=" + lastName
-				+ ", gender=" + gender + ", contacts=" + contacts + ", address=" + address + ", skills=" + skills
+				+ ", gender=" + gender + ", contacts=" + contacts + ", addresses=" + addresses + ", skills=" + skills
 				+ ", experience=" + experience + ", annualPkg=" + annualPkg + ", salary=" + salary + ", joiningDate="
 				+ joiningDate + ", releasingDate=" + releasingDate + ", employeeStatus=" + employeeStatus
-				+ ", previousEmmployerDetails=" + previousEmmployerDetails + "]";
+				+ ", PreviousEmployerDetails=" + previousEmployerDetails + "]";
 	}
 
 }

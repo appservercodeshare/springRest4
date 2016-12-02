@@ -3,14 +3,52 @@ package com.spring4.rest.controllers.beans;
 import java.util.Date;
 import java.util.Set;
 
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "projects")
 public class Project {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "project_id")
+	private Integer projectId;
+
+	@Column(name = "proj_title")
 	private String projectTitle;
+
+	@ElementCollection(targetClass = java.lang.String.class)
+	@CollectionTable(name = "technologies", joinColumns = { @JoinColumn(name = "project_id")})
+	@Column(name = "technology")
 	private Set<String> technologies;
+	
+	@Column(name = "team_size")
 	private Integer teamStrength;
+	
+	@Column(name = "start_date")
 	private Date startDate;
+	
+	@Column(name = "end_date")
 	private Date endDate;
+	
+	@Column(name = "client_name")
 	private String clientName;
+
+	public Integer getProjectId() {
+		return projectId;
+	}
+
+	public void setProjectId(Integer projectId) {
+		this.projectId = projectId;
+	}
 
 	public String getProjectTitle() {
 		return projectTitle;
@@ -62,9 +100,9 @@ public class Project {
 
 	@Override
 	public String toString() {
-		return "Project [projectTitle=" + projectTitle + ", technologies=" + technologies + ", teamStrength="
-				+ teamStrength + ", startDate=" + startDate + ", endDate=" + endDate + ", clientName=" + clientName
-				+ "]";
+		return "Project [projectId=" + projectId + ", projectTitle=" + projectTitle + ", technologies=" + technologies
+				+ ", teamStrength=" + teamStrength + ", startDate=" + startDate + ", endDate=" + endDate
+				+ ", clientName=" + clientName + "]";
 	}
 
 }
