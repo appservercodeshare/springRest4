@@ -12,6 +12,7 @@ com\spring4\rest\controllers\beans\Address.class
 com\spring4\rest\daos\AbstractCurdDao.class
 com\spring4\rest\daos\EmployeeDao.class
 com\spring4\rest\configs\AppInitializer.class
+com\spring4\rest\controllers\beans\Foo.class
 com\spring4\rest\controllers\beans\EmployerAddress.class
 com\spring4\rest\enums\EmployeeStatus.class
 com\spring4\rest\utils\Utils.class

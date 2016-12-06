@@ -11,6 +11,7 @@ import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,6 +19,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 @Table(name = "prev_emp_details")
@@ -27,41 +33,44 @@ public class PreviousEmployerDetail {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "prev_emplr_id")
 	private Integer prevEmployerDetailId;
-	
+
 	@Column(name = "comp_nm")
 	private String companyName;
-	
+
 	@Embedded
-	@AttributeOverrides({@AttributeOverride(name = "landMark", column = @Column(name = "land_mark"))})
+	@AttributeOverrides({ @AttributeOverride(name = "landMark", column = @Column(name = "land_mark")) })
 	private EmployerAddress employerAddress;
-	
-	@ElementCollection
-	@CollectionTable(name = "emplr_contacts", joinColumns = {@JoinColumn(name = "prev_emp_details")})
+
+	@ElementCollection(fetch = FetchType.EAGER)
+	@CollectionTable(name = "emplr_contacts", joinColumns = { @JoinColumn(name = "prev_emp_details") })
 	@MapKeyColumn(name = "contact_type")
 	@Column(name = "contact")
 	private Map<String, String> contacts;
-	
+
 	@Column(name = "description")
 	private String description;
-	
+
 	@Column(name = "joiningDate")
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date joiningDate;
-	
+
 	@Column(name = "releasingDate")
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date releasingDate;
-	
+
 	@Embedded
-	@AttributeOverrides({@AttributeOverride(name = "r_nm", column = @Column(name = "role_name")),
-		@AttributeOverride(name = "respo", column = @Column(name = "responsibility"))})
+	@AttributeOverrides({ @AttributeOverride(name = "roleName", column = @Column(name = "role_name")),
+			@AttributeOverride(name = "responsiblities", column = @Column(name = "responsiblity")) })
 	private Role jobRole;
-	
+
 	@Column(name = "max_annual_pkg")
 	private double highestAnnualPkg;
-	
+
 	@Column(name = "max_salary")
 	private double highestSalary;
-	
-	@OneToMany
+
+	@OneToMany(fetch = FetchType.EAGER)
+	@Cascade({CascadeType.SAVE_UPDATE, CascadeType.DELETE})
 	@JoinColumn(name = "prev_emp_details")
 	private Set<Project> projects;
 
@@ -81,11 +90,11 @@ public class PreviousEmployerDetail {
 		this.companyName = companyName;
 	}
 
-	public EmployerAddress getAddress() {
+	public EmployerAddress getEmployerAddress() {
 		return employerAddress;
 	}
 
-	public void setAddress(EmployerAddress employerAddress) {
+	public void setEmployerAddress(EmployerAddress employerAddress) {
 		this.employerAddress = employerAddress;
 	}
 
@@ -156,9 +165,10 @@ public class PreviousEmployerDetail {
 	@Override
 	public String toString() {
 		return "PreviousEmployerDetail [prevEmployerDetailId=" + prevEmployerDetailId + ", companyName=" + companyName
-				+ ", employerAddress=" + employerAddress + ", contacts=" + contacts + ", description=" + description + ", joiningDate="
-				+ joiningDate + ", releasingDate=" + releasingDate + ", jobRole=" + jobRole + ", highestAnnualPkg="
-				+ highestAnnualPkg + ", highestSalary=" + highestSalary + ", projects=" + projects + "]";
+				+ ", employerAddress=" + employerAddress + ", contacts=" + contacts + ", description=" + description
+				+ ", joiningDate=" + joiningDate + ", releasingDate=" + releasingDate + ", jobRole=" + jobRole
+				+ ", highestAnnualPkg=" + highestAnnualPkg + ", highestSalary=" + highestSalary + ", projects="
+				+ projects + "]";
 	}
 
 }

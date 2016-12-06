@@ -2,6 +2,7 @@ package com.spring4.rest.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +23,9 @@ public class EmployeeController {
 	@Autowired
 	private EmployeeService employeeService;
 	
-	@GetMapping("/getEmployeeById")
+	
+	@GetMapping(value = "/getEmployeeById/{employeeId}", 
+			produces  = "application/json")
 	@SuppressWarnings("rawtypes")
 	public ResponseEntity getEmployeeById(@PathVariable("employeeId") Integer employeeId) {
 		
@@ -30,7 +33,7 @@ public class EmployeeController {
 		
 		Employee dbEmployee = employeeService.getEmployeeById(employeeId);
 		
-		if(isNullOrEmpty(dbEmployee)) {
+		if(!isNullOrEmpty(dbEmployee)) {
 			respEntity = new ResponseEntity<Employee>(dbEmployee, HttpStatus.FOUND);
 		} else {
 			respEntity = new ResponseEntity<String>("No Employee found for ID", HttpStatus.NOT_FOUND); 
@@ -39,7 +42,9 @@ public class EmployeeController {
 		return respEntity;
 	}
 	
-	@PostMapping(value = "/createEmployee")
+	@PostMapping(value = "/createEmployee",
+			consumes = MediaType.APPLICATION_JSON_VALUE,
+			produces = MediaType.APPLICATION_JSON_VALUE)
 	@SuppressWarnings("rawtypes")
 	public ResponseEntity createEmployee(@RequestBody Employee employee) {
 		
@@ -48,7 +53,7 @@ public class EmployeeController {
 		
 		Employee dbEmployee = employeeService.createEmployee(employee);
 		
-		if(isNullOrEmpty(dbEmployee)) {
+		if(!isNullOrEmpty(dbEmployee)) {
 			respEntity = new ResponseEntity<Employee>(dbEmployee, HttpStatus.CREATED);
 		} else {
 			respEntity = new ResponseEntity<String>("Employee is not created", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -65,7 +70,7 @@ public class EmployeeController {
 		
 		Employee dbEmployee = employeeService.updateEmployee(employee);
 		
-		if(isNullOrEmpty(dbEmployee)) {
+		if(!isNullOrEmpty(dbEmployee)) {
 			respEntity = new ResponseEntity<Employee>(dbEmployee, HttpStatus.FOUND);
 		} else {
 			respEntity = new ResponseEntity<String>("Employee is not FOUND", HttpStatus.NOT_FOUND);
@@ -74,8 +79,8 @@ public class EmployeeController {
 		return respEntity;
 	}
 	
-	@DeleteMapping(value = "/deleteEmployee")
-	public ResponseEntity<Void> deleteEmployee(Integer employeeId) {
+	@DeleteMapping(value = "/deleteEmployee/{employeeId}")
+	public ResponseEntity<Void> deleteEmployee(@PathVariable("employeeId") Integer employeeId) {
 		ResponseEntity<Void> respEntity = null;
 		
 		Integer dbEmployeeId = employeeService.deleteEmployee(employeeId);

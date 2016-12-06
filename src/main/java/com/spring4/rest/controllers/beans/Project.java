@@ -7,11 +7,14 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 @Table(name = "projects")
@@ -25,7 +28,7 @@ public class Project {
 	@Column(name = "proj_title")
 	private String projectTitle;
 
-	@ElementCollection(targetClass = java.lang.String.class)
+	@ElementCollection(targetClass = java.lang.String.class, fetch = FetchType.EAGER)
 	@CollectionTable(name = "technologies", joinColumns = { @JoinColumn(name = "project_id")})
 	@Column(name = "technology")
 	private Set<String> technologies;
@@ -34,9 +37,11 @@ public class Project {
 	private Integer teamStrength;
 	
 	@Column(name = "start_date")
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date startDate;
 	
 	@Column(name = "end_date")
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date endDate;
 	
 	@Column(name = "client_name")

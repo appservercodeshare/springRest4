@@ -8,6 +8,7 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,6 +17,10 @@ import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.spring4.rest.enums.EmployeeStatus;
 
 @Entity
@@ -35,22 +40,21 @@ public class Employee {
 
 	@Column(name = "gender")
 	private String gender;
-	
-	@ElementCollection(targetClass = java.lang.String.class)
-	@CollectionTable(name = "contacts", joinColumns = {@JoinColumn(name = "emp_id")})
+
+	@ElementCollection(targetClass = java.lang.String.class, fetch=FetchType.EAGER)
+	@CollectionTable(name = "contacts", joinColumns = { @JoinColumn(name = "emp_id") })
 	@MapKeyColumn(name = "contact_type")
 	@Column(name = "contact")
 	private Map<String, String> contacts;
 
-	@ElementCollection
-	@CollectionTable(name = "addresses", joinColumns = {@JoinColumn(name = "emp_id")})
+	@ElementCollection(fetch=FetchType.EAGER)
+	@CollectionTable(name = "addresses", joinColumns = { @JoinColumn(name = "emp_id") })
 	@MapKeyColumn(name = "address_type")
 	@Column(name = "address")
 	private Map<String, Address> addresses;
-	
-	
-	@ElementCollection(targetClass = java.lang.String.class)
-	@CollectionTable(name = "skills", joinColumns = {@JoinColumn(name = "emp_id")})
+
+	@ElementCollection(targetClass = java.lang.String.class, fetch=FetchType.EAGER)
+	@CollectionTable(name = "skills", joinColumns = { @JoinColumn(name = "emp_id") })
 	@Column(name = "skill")
 	private Set<String> skills;
 
@@ -64,15 +68,18 @@ public class Employee {
 	private String salary;
 
 	@Column(name = "joiningDate")
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date joiningDate;
 
 	@Column(name = "releasingDate")
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date releasingDate;
 
 	@Column(name = "employeeStatus")
 	private EmployeeStatus employeeStatus;
 
-	@OneToMany
+	@OneToMany(fetch = FetchType.EAGER)
+	@Cascade({CascadeType.SAVE_UPDATE, CascadeType.DELETE})
 	@JoinColumn(name = "emp_id")
 	private Set<PreviousEmployerDetail> previousEmployerDetails;
 
@@ -180,11 +187,11 @@ public class Employee {
 		this.employeeStatus = employeeStatus;
 	}
 
-	public Set<PreviousEmployerDetail> getPreviousEmmployerDetails() {
+	public Set<PreviousEmployerDetail> getPreviousEmployerDetails() {
 		return previousEmployerDetails;
 	}
 
-	public void setPreviousEmmployerDetails(Set<PreviousEmployerDetail> previousEmployerDetails) {
+	public void setPreviousEmployerDetails(Set<PreviousEmployerDetail> previousEmployerDetails) {
 		this.previousEmployerDetails = previousEmployerDetails;
 	}
 
@@ -194,7 +201,7 @@ public class Employee {
 				+ ", gender=" + gender + ", contacts=" + contacts + ", addresses=" + addresses + ", skills=" + skills
 				+ ", experience=" + experience + ", annualPkg=" + annualPkg + ", salary=" + salary + ", joiningDate="
 				+ joiningDate + ", releasingDate=" + releasingDate + ", employeeStatus=" + employeeStatus
-				+ ", PreviousEmployerDetails=" + previousEmployerDetails + "]";
+				+ ", previousEmployerDetails=" + previousEmployerDetails + "]";
 	}
 
 }

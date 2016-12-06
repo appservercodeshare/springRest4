@@ -25,7 +25,7 @@ public class EmployeeDaoImpl extends AbstractCurdDao implements EmployeeDao {
 	}
 
 	public Integer deleteEmployee(Integer employeeId) {
-		delete(employeeId);
+		delete(getEmployeeById(employeeId));
 		return employeeId;
 	}
 
